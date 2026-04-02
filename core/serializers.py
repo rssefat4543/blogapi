@@ -17,12 +17,15 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class PostSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
-    tags = TagSerializer(many=True)
+    tags = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Tag.objects.all()
+    )
 
     class Meta:
         model = Post
         fields = ['id', 'title', 'content', 'category', 'author', 'tags', 'created_at']
+        read_only_fields = ['author', 'created_at'] 
 
 class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
